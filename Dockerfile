@@ -7,14 +7,15 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # Install prerequisites
 RUN apt-get update \
     && apt-get install -qqy --force-yes \
-    openjdk-7-jre-headless \
-    x11vnc \
-    xvfb \
-    xfonts-100dpi \
-    xfonts-75dpi \
-    xfonts-scalable \
-    xfonts-cyrillic \
-    wget \
+      bzip2 \
+      openjdk-7-jre-headless \
+      x11vnc \
+      xvfb \
+      xfonts-100dpi \
+      xfonts-75dpi \
+      xfonts-scalable \
+      xfonts-cyrillic \
+      wget \
 	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install browsers
@@ -33,8 +34,18 @@ RUN useradd -d /home/seleuser -m seleuser \
   && chown -R seleuser /home/seleuser \
   && chgrp -R seleuser /home/seleuser
 
+# Install NodeJS
+ENV NVM_DIR /usr/local/nvm
+
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash \
+  && . "$NVM_DIR/nvm.sh" \
+  && nvm install node \
+  && nvm use node
+
 # Install Selenium and Phantomjs
-RUN npm install -gs \
+RUN . "$NVM_DIR/nvm.sh" \
+  && nvm use node \
+  && npm install -gs \
     selenium-standalone@latest \
     phantomjs@latest \
   && selenium-standalone install
