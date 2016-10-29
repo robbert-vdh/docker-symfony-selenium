@@ -8,6 +8,7 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 RUN apt-get update \
     && apt-get install -qqy --force-yes \
       bzip2 \
+      git \
       openjdk-7-jre-headless \
       x11vnc \
       xvfb \
